@@ -6,7 +6,7 @@ class func:
 
         #There are clearly more efficient ways of doing this 
         #and such a class probably already exists, etc, but it's faster for stubbing to just make one
-
+        
         self.keys = keys
         self.domains = domains
         self.rules = rules

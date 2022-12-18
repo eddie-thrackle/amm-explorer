@@ -3,7 +3,6 @@ from copy import deepcopy
 
 # third party modules
 import streamlit as st
-# import pandas as pd
 
 # custom modules
 from utils.amm import AMM, f_pwl, g_pwl2
@@ -68,5 +67,3 @@ def main():
     col3.altair_chart(plot_balance_history(), use_container_width=True)
 
 main()
-
-    

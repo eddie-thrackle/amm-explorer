@@ -5,8 +5,7 @@ def get_chart(
     data, chart_title = 'AMM config', 
     symbol = 'function', 
     x = 'input', y = 'output', 
-    x_title = 'input', y_title = 'output',
-    n_ticks = None
+    x_title = 'input', y_title = 'output'
 ):
     
     hover = alt.selection_single(
