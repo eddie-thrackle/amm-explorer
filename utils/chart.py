@@ -68,6 +68,5 @@ def plot_balance_history(filename='amm_state.txt'):
         data = pd.DataFrame(data),
         chart_title = 'Balance History', symbol = 'Balance Type',
         x = 'Time Step', y = 'Amount', 
-        x_title = 'Time Step', y_title = 'Amount',
-        n_ticks = t   
+        x_title = 'Time Step', y_title = 'Amount'
     )
