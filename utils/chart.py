@@ -55,18 +55,18 @@ def plot_amm(amm, col):
     return get_chart(source)
 
 def plot_balance_history(filename='amm_state.txt'):
-    data = {"Time Step": [], "Amount": [], "Balance Type": []}
+    data = {"Exchange Event ID": [], "Amount": [], "Balance Type": []}
     t = 0
     with open(filename, 'r') as f:
         for line in f.readlines():
             amm_balances = list(map(float, line.split()))
-            data['Time Step'].extend([t]*4)
+            data['Exchange Event ID'].extend([t]*4)
             data['Amount'].extend(amm_balances)
             data['Balance Type'].extend(['X virtual', 'Y virtual', 'X real', 'Y real'])
             t += 1
     return get_chart(
         data = pd.DataFrame(data),
         chart_title = 'Balance History', symbol = 'Balance Type',
-        x = 'Time Step', y = 'Amount', 
-        x_title = 'Time Step', y_title = 'Amount'
+        x = 'Exchange Event ID', y = 'Amount', 
+        x_title = 'Exchange Event ID', y_title = 'Amount'
     )

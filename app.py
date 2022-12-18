@@ -23,15 +23,19 @@ def write_amm_state(amm, filename='amm_state.txt', write_mode='a'):
 
 def main():
 
-    # Hacky workaround. Local filesystem seems like a bad solution for deployed version.
-    # TODO: read about how Streamlit deployment handles state in multi-user context.
+    if col1.button('Reset State'):
+        amm = AMM(70, 30, 70, 30, f=deepcopy(f_pwl), g=deepcopy(g_pwl2))
+        write_amm_state(amm, write_mode='w')
+
+    # Kinda hacky. Local filesystem is a bad solution for deployed version.
+    # Then, someone else changing the state affects my state on reload. Idk if this is good. 
     with open('amm_state.txt', 'r') as f: 
         amm_states = list(map(float, f.read().split()))
         last_state = [float(state_var) for state_var in amm_states[-4:]]
         # amm.extend_x function modifies f and g, so we deepcopy to get "fresh" state of these functions.
-        amm = AMM(*last_state, f=deepcopy(f_pwl), g=deepcopy(g_pwl2))
+        amm = AMM(*last_state, f = deepcopy(f_pwl), g = deepcopy(g_pwl2))
 
-    # AMM Creation Prompts
+    # AMM Config Prompts
     with col1.form('AMM Config Form'):
         st.markdown('## Fresh AMM Config')
         amm_state = [float(state_var) for state_var in amm.balance_history[-1]]
@@ -40,11 +44,11 @@ def main():
         x_real = st.number_input('X real', value=amm_state[2])
         y_real = st.number_input('Y real', value=amm_state[3])
         if st.form_submit_button("Submit AMM State"):
-            amm = AMM(x_virt, y_virt, x_real, y_real, f=deepcopy(f_pwl), g=deepcopy(g_pwl2))
+            amm = AMM(x_virt, y_virt, x_real, y_real, f = deepcopy(f_pwl), g = deepcopy(g_pwl2))
             # Erase all AMM history. Not expecting people care too much about reproducing state ATM.
             write_amm_state(amm, write_mode='w')
 
-    # Post-AMM Creation Prompts 
+    # AMM Interaction Prompts 
     with col2.form("(Any KYC'd Wallet) Exchange Form"):
         st.markdown("## Exchange")
         token = st.text_input('Token to sell', 'x')
@@ -60,7 +64,6 @@ def main():
         m = st.number_input('m', value=200)
         if st.form_submit_button("Extend AMM"):
             amm.extend_x(f, m)
-            write_amm_state(amm)
 
     # make plots
     col3.altair_chart(plot_amm(amm, col3), use_container_width=True)
