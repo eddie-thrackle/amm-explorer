@@ -70,3 +70,22 @@ def plot_balance_history(filename='amm_state.txt'):
         x = 'Exchange Event ID', y = 'Amount', 
         x_title = 'Exchange Event ID', y_title = 'Amount'
     )
+
+def plot_exchange_history(filename='exchange_log.txt'):
+    data  = {
+        "Exchange Event ID": [], 
+        "Sell Asset": [], "Sell Amount": [], 
+        "Buy Asset": [], "Buy Amount": []
+    }
+    with open(filename, 'r') as f:
+        for id, _line in enumerate(f.readlines()):
+            _line_contents_as_str = _line.split()
+            if len(_line_contents_as_str) == 0: 
+                continue
+            data["Exchange Event ID"].append(id)
+            data["Sell Asset"].append(_line_contents_as_str[0])
+            data["Sell Amount"].append(float(_line_contents_as_str[1]))
+            data["Buy Asset"].append(_line_contents_as_str[2])
+            data["Buy Amount"].append(float(_line_contents_as_str[3]))
+    return pd.DataFrame(data)
+
