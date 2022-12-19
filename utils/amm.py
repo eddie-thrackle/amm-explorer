@@ -1,12 +1,13 @@
 import pandas as pd
+from functools import partial
 
 class func:
 
     def __init__(self, keys, domains, rules, handle = None, shifts = None):
 
-        #There are clearly more efficient ways of doing this 
-        #and such a class probably already exists, etc, but it's faster for stubbing to just make one
-        
+        # There are clearly more efficient ways of doing this 
+        # and such a class probably already exists, etc, but it's faster for stubbing to just make one.
+
         self.keys = keys
         self.domains = domains
         self.rules = rules
@@ -36,13 +37,12 @@ class func:
         domain = range(a, b)
         outputs = [self.eval(x) for x in range(a,b)]
         return pd.DataFrame({'input': list(domain), 'output': outputs, 'function': [self.handle]*len(outputs)})
-    
-    # display.plot()
 
 f_pwl = func(
     keys = [0, 1], 
     domains = {0: [0,100], 1: [100, 150]}, 
     rules = {0: lambda t: 200 - t, 1: lambda t: 300 - 2*t},
+    # rules = {0: partial(linear_rule(-1, 200)), 1: partial(linear_rule(-2, 300))},
     handle = 'f'
 )
 
@@ -50,6 +50,7 @@ g_pwl = func(
     keys = [0, 1],
     domains = {0: [0,100], 1: [100, 200]}, 
     rules = {0: lambda t: 150 - t/2, 1: lambda t: 200 - t},
+    # rules = {0: partial(linear_rule(-1/2, 150)), 1: partial(linear_rule(-1, 200))},
     handle = 'g'
 )
 
@@ -57,6 +58,7 @@ g_pwl2 = func(
     keys = [0, 1], 
     domains = {0: [0,100], 1: [100, 250]}, 
     rules = {0: lambda t: 150 - t/2, 1: lambda t: 180 - 4*t/5},
+    # rules = {0: partial(linear_rule(-1/2, 150)), 1: partial(linear_rule(-4/5, 180))},
     handle = 'g'
 )
 
@@ -107,6 +109,8 @@ class AMM:
     fx.domains[fx.keys[-1]] = [0,m]
     fx.rules[fx.keys[-1]] = f_ext
     fx.shifts[fx.keys[-1]] = 0
+
+    # print(fx.keys, fx.domains, fx.rules, fx.shifts)
 
   def display(self):
     x_res = self.functions['x'].plot()

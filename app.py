@@ -3,6 +3,7 @@ from copy import deepcopy
 
 # third party modules
 import streamlit as st
+import dill as pickle
 
 # custom modules
 from utils.amm import AMM, f_pwl, g_pwl2
@@ -15,6 +16,8 @@ col1, col2, col3 = st.columns([1,1,3])
 
 BALANCE_HISTORY_PATH = 'amm_state.txt'
 EXCHANGE_LOG_PATH = 'exchange_log.txt'
+F_PATH = 'f.pkl'
+G_PATH = 'g.pkl'
 
 def write_amm_state(amm, filename=BALANCE_HISTORY_PATH, write_mode='a'):
     with open(filename, write_mode) as f:
@@ -31,20 +34,40 @@ def log_exchange(token, n, other_token, amount, filename=EXCHANGE_LOG_PATH, writ
             token, n, other_token, amount
         ))
 
+def write_function_states(f, g):
+    with open(F_PATH, 'wb') as file:
+        pickle.dump(f, file)
+    with open(G_PATH, 'wb') as file:
+        pickle.dump(g, file)
+    
+def hard_reset():
+    global amm 
+    amm = AMM(70, 30, 70, 30, f=deepcopy(f_pwl), g=deepcopy(g_pwl2))
+    write_amm_state(amm, write_mode='w')
+    write_function_states(amm.functions['x'], amm.functions['y'])
+    open(EXCHANGE_LOG_PATH, 'w').close()
+
 def main():
 
     if col1.button('Reset State'):
-        amm = AMM(70, 30, 70, 30, f=deepcopy(f_pwl), g=deepcopy(g_pwl2))
-        write_amm_state(amm, write_mode='w')
-        open(EXCHANGE_LOG_PATH, 'w').close() # empty log
+        hard_reset()
 
-    # Kinda hacky. Local filesystem is a bad solution for deployed version.
-    # Then, someone else changing the state affects my state on reload. Idk if this is good. 
+    global amm
     with open(BALANCE_HISTORY_PATH, 'r') as f: 
         amm_states = list(map(float, f.read().split()))
         last_state = [float(state_var) for state_var in amm_states[-4:]]
-        # amm.extend_x function modifies f and g, so deepcopy to get "fresh" state of functions.
-        amm = AMM(*last_state, f = deepcopy(f_pwl), g = deepcopy(g_pwl2))
+    
+    try:
+        with open(F_PATH, 'rb') as f:
+            f_latest = pickle.load(f)
+        with open(G_PATH, 'rb') as f:
+            g_latest = pickle.load(f)
+    except FileNotFoundError:
+        print('File not found.')
+        f_latest = deepcopy(f_pwl)
+        g_latest = deepcopy(g_pwl2)
+        
+    amm = AMM(*last_state, f = f_latest, g = g_latest)
 
     # AMM Config Prompts
     with col1.form('AMM Config'):
@@ -57,8 +80,7 @@ def main():
         y_real = st.number_input('Y real', value=amm_state[3])
         if st.form_submit_button("Submit AMM State"):
             amm = AMM(x_virt, y_virt, x_real, y_real, f = deepcopy(f_pwl), g = deepcopy(g_pwl2))
-            # Erase all AMM history. Does not expect people care about reproducing state ATM. TBD.
-            write_amm_state(amm, write_mode='w')
+            write_amm_state(amm, write_mode='w') # erase state! 
 
     # AMM Interaction Prompts 
     with col2.form("(Any KYC'd Wallet) Exchange Form"):
@@ -69,8 +91,9 @@ def main():
         if st.form_submit_button("Submit Sell Order"):
             amount, other_token = amm.sell(n, token)
             write_amm_state(amm)
+            write_function_states(amm.functions['x'], amm.functions['y'])
             log_exchange(token, n, other_token, amount)
-            st.experimental_rerun()
+            # st.experimental_rerun()
     
     with col2.form("(GTGDA) Extend AMM"):
         st.markdown("## Extend AMM")
@@ -80,6 +103,8 @@ def main():
         m = st.number_input('m', value=200)
         if st.form_submit_button("Extend AMM"):
             amm.extend_x(f, m)
+            write_amm_state(amm)
+            write_function_states(amm.functions['x'], amm.functions['y'])
 
     # make plots
     col3.altair_chart(plot_amm(amm, col3), use_container_width=True)
@@ -87,4 +112,8 @@ def main():
     if len(open(EXCHANGE_LOG_PATH, 'r').readlines()) > 0:
         col3.dataframe(plot_exchange_history())
 
+if 'initialized' not in st.session_state:
+    hard_reset()
+    st.session_state['initialized'] = True
+    
 main()
