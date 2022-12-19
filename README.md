@@ -3,7 +3,7 @@
 ## Instructions
 To setup,
 1. Create your favorite kind of Python virtual environment
-2. Install the modules in the `requirements.txt` file with `$pip install -r requirements.txt`
+2. Install the modules in the `requirements.txt` file with `pip install -r requirements.txt`
 
 To run the app locally,
 ```
