@@ -12,7 +12,7 @@ from utils.chart import plot_amm, plot_balance_history, plot_exchange_history
 # streamlit page config
 st.set_page_config(layout="wide", page_icon="💬", page_title="AMM Designer")
 st.title("AMM/TBC Explorer")
-col1, col2, col3 = st.columns([1,1,3])
+col1, col2 = st.columns([2,1])
 
 BALANCE_HISTORY_PATH = 'amm_state.txt'
 EXCHANGE_LOG_PATH = 'exchange_log.txt'
@@ -49,7 +49,7 @@ def hard_reset():
 
 def main():
 
-    if col1.button('Reset State'):
+    if col2.button('Reset State'):
         hard_reset()
 
     global amm
@@ -70,7 +70,7 @@ def main():
     amm = AMM(*last_state, f = f_latest, g = g_latest)
 
     # AMM Config Prompts
-    with col1.form('AMM Config'):
+    with col2.form('AMM Config'):
         st.markdown('## AMM Config')
         st.write('Fill in the balances you want for each. This will reset the state of the AMM accordingly.')
         amm_state = [float(state_var) for state_var in amm.balance_history[-1]]
@@ -95,7 +95,7 @@ def main():
             log_exchange(token, n, other_token, amount)
             # st.experimental_rerun()
     
-    with col2.form("(GTGDA) Extend AMM"):
+    with col1.form("(GTGDA) Extend AMM"):
         st.markdown("## Extend AMM")
         st.write('Add a kink to the AMM by extending in the `x` dimension.')
         st.write("Write a function using [Python lambda syntax](https://realpython.com/python-lambda/).")
@@ -107,10 +107,10 @@ def main():
             write_function_states(amm.functions['x'], amm.functions['y'])
 
     # make plots
-    col3.altair_chart(plot_amm(amm, col3), use_container_width=True)
-    col3.altair_chart(plot_balance_history(), use_container_width=True)
+    col1.altair_chart(plot_amm(amm, col1), use_container_width=True)
+    col1.altair_chart(plot_balance_history(), use_container_width=True)
     if len(open(EXCHANGE_LOG_PATH, 'r').readlines()) > 0:
-        col3.dataframe(plot_exchange_history())
+        col1.dataframe(plot_exchange_history())
 
 if 'initialized' not in st.session_state:
     hard_reset()
