@@ -47,7 +47,7 @@ def main():
 
     ### Second section - Linear TBC
     left_col2.header('Changing parameters on a linear TBC Segment')
-    slope_slider_section2 = left_col2.slider('Slope on second TBC segment :mountain: :skier:', min_value=-5., max_value=20., value=2.3, step=0.1)
+    slope_slider_section2 = left_col2.slider('Slope on second TBC segment', min_value=-5., max_value=20., value=2.3, step=0.1)
     # y_intercept_slider_section2 = left_col2.slider('Y-intercept on second TBC segment', min_value=-3., max_value=-1., value=-2., step=0.1)
     y_intercept_section2 = 2 - slope_slider_section2*2
 
@@ -81,7 +81,7 @@ def main():
         domain_width = right_col3.slider('Domain width', min_value=0.1, max_value=10., value=2., step=0.1,  key = 'flat-domain')
     elif radio == 'Linear':
         # streamlit widgets to set slope and domain width of second segment
-        slope_slider_section3 = right_col3.slider('Slope on second TBC segment :mountain: :skier:', min_value=-5., max_value=20., value=2.3, step=0.1, key='linear-slope')
+        slope_slider_section3 = right_col3.slider('Slope on second TBC segment', min_value=-5., max_value=20., value=2.3, step=0.1, key='linear-slope')
         y_intercept_section3 = 2 - slope_slider_section3*2
         f4 = 2
         f5 = slope_slider_section3*x + y_intercept_section3
