@@ -2,6 +2,9 @@ import streamlit as st
 from pool import Pool, CurveSegment, SYMBOL_LOOKUP
 from sympy import latex
 
+st.set_page_config(layout="wide", page_title="TBC to AMM")
+st.title("TBC to AMM Explorer")
+
 st.markdown('''
 Token bonding curves and AMMs,
 Two sides of the same coin, it seems.
@@ -31,8 +34,6 @@ Of the decentralized economy, we join.
 Written by [ChatGPT](https://chat.openai.com/chat) (01/24/2023).
 ''')
 
-st.set_page_config(layout="wide", page_title="TBC to AMM")
-st.title("TBC to AMM Explorer")
 st.text('What comes first, AMM balances or TBC segments? A tale as old as DeFi.')
 st.text('''
     In this iteration of the project the focus was on going from TBC to AMM
