@@ -2,11 +2,6 @@ import streamlit as st
 from pool import Pool, CurveSegment, SYMBOL_LOOKUP
 from sympy import latex
 
-st.set_page_config(
-    page_title="Hello",
-    page_icon="👋",
-)
-
 st.markdown('''
 Token bonding curves and AMMs,
 Two sides of the same coin, it seems.
