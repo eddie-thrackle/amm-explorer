@@ -106,7 +106,7 @@ st.markdown("""
 
 
 
-Token bonding curves and AMMs,<br/>
+Token bonding curves and AMMs,
 Two sides of the same coin, it seems.
 One a mechanism for price discovery,
 The other for liquidity, it beams.
