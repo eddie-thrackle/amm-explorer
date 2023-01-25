@@ -1,4 +1,6 @@
 import streamlit as st
+from pool import Pool, CurveSegment, SYMBOL_LOOKUP
+from sympy import latex
 
 st.set_page_config(
     page_title="Hello",
@@ -33,10 +35,6 @@ Of the decentralized economy, we join.
 
 Written by [ChatGPT](https://chat.openai.com/chat) (01/24/2023).
 ''')
-
-from pool import Pool, CurveSegment, SYMBOL_LOOKUP
-import streamlit as st
-from sympy import latex
 
 st.set_page_config(layout="wide", page_title="TBC to AMM")
 st.title("TBC to AMM Explorer")
