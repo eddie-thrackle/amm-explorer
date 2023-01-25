@@ -7,7 +7,7 @@ To setup,
 
 To run the app locally,
 ```
-streamlit run app.py
+streamlit run Homepage.py
 ```
 
 [Here](https://amm-explorer.streamlit.app/) is a version deployed to Streamlit Cloud. 
