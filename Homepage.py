@@ -40,7 +40,7 @@ def main():
     left_col.pyplot(fig)
 
     container2 = st.container()
-    left_col2, right_col2 = container2.columns([1, 1])
+    left_col2, _, right_col2 = container2.columns([5,1,5])
 
     ### Second section - Linear TBC
     left_col2.markdown('#### Changing parameters on a linear TBC Segment')
@@ -62,7 +62,7 @@ def main():
 
     ### Third section - Free play mode
     container3 = st.container()
-    left_col3, right_col3 = container3.columns([1, 1])
+    left_col3, _, right_col3 = container3.columns([5,1,5])
     right_col3.markdown('#### Free play mode')
 
     radio = right_col3.radio('Select a functional form for the second TBC segment', ['Flat', 'Linear'])
