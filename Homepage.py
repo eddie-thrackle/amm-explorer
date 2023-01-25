@@ -19,12 +19,12 @@ st.text('''
 def main():
 
     container1 = st.container()
-    left_col, right_col = container1.columns([1, 1])
+    left_col, _, right_col = container1.columns([5,1,5])
 
     x = SYMBOL_LOOKUP['x']
 
     ### First section - Flat TBC
-    right_col.header('Changing parameters on a flat TBC Segment')
+    right_col.markdown('#### Changing parameters on a flat TBC Segment')
     height_section1 = right_col.slider('Height of second TBC segment', min_value=0., max_value=7., value=2., step=0.1)
 
     f0 = 2
@@ -33,12 +33,9 @@ def main():
 
     pool1 = Pool(initial_tbc_segments)
     tbc_segments1, integrated_tbc_segments1, amm_segments1 = pool1.amm_curve
-    right_col.markdown('TBC Segments')
-    right_col.latex(latex(tbc_segments1))
-    right_col.markdown('Integrated TBC Segments')
-    right_col.latex(latex(integrated_tbc_segments1))
-    right_col.markdown('AMM Segments')
-    right_col.latex(latex(amm_segments1))
+    right_col.latex(r"\text{TBC Segments | } " + latex(tbc_segments1))
+    right_col.latex(r"\text{Integrated TBC Segments | } " + latex(integrated_tbc_segments1))
+    right_col.latex(r"\text{AMM Segments | } " +  latex(amm_segments1))
     fig, _ = pool1.plot()
     left_col.pyplot(fig)
 
@@ -46,7 +43,7 @@ def main():
     left_col2, right_col2 = container2.columns([1, 1])
 
     ### Second section - Linear TBC
-    left_col2.header('Changing parameters on a linear TBC Segment')
+    left_col2.markdown('#### Changing parameters on a linear TBC Segment')
     slope_slider_section2 = left_col2.slider('Slope on second TBC segment', min_value=-5., max_value=20., value=2.3, step=0.1)
     # y_intercept_slider_section2 = left_col2.slider('Y-intercept on second TBC segment', min_value=-3., max_value=-1., value=-2., step=0.1)
     y_intercept_section2 = 2 - slope_slider_section2*2
@@ -57,19 +54,16 @@ def main():
 
     pool2 = Pool(initial_tbc_segments)
     tbc_segments2, integrated_tbc_segments2, amm_segments2 = pool2.amm_curve
-    left_col2.markdown('TBC Segments')
-    left_col2.latex(latex(tbc_segments2))
-    left_col2.markdown('Integrated TBC Segments')
-    left_col2.latex(latex(integrated_tbc_segments2))
-    left_col2.markdown('AMM Segments')
-    left_col2.latex(latex(amm_segments2))
+    left_col2.latex(r"\text{TBC Segments | } " + latex(tbc_segments2))
+    left_col2.latex(r"\text{Integrated TBC Segments | } " + latex(integrated_tbc_segments2))
+    left_col2.latex(r"\text{AMM Segments | } " +  latex(amm_segments2))
     fig, _ = pool2.plot()
     right_col2.pyplot(fig)
 
     ### Third section - Free play mode
     container3 = st.container()
     left_col3, right_col3 = container3.columns([1, 1])
-    right_col3.header('Free play mode')
+    right_col3.markdown('#### Free play mode')
 
     radio = right_col3.radio('Select a functional form for the second TBC segment', ['Flat', 'Linear'])
 
@@ -96,6 +90,10 @@ def main():
     right_col3.latex(latex(integrated_tbc_segments3))
     right_col3.markdown('AMM Segments')
     right_col3.latex(latex(amm_segments3))
+
+    right_col3.latex(r"\text{TBC Segments | } " + latex(tbc_segments3))
+    right_col3.latex(r"\text{Integrated TBC Segments | } " + latex(integrated_tbc_segments3))
+    right_col3.latex(r"\text{AMM Segments | } " +  latex(amm_segments3))
     fig, _ = pool3.plot()
     left_col3.pyplot(fig)
 
